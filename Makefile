@@ -36,11 +36,26 @@ network_create:
 # ==================================================================
 
 # GIT targets
-git-fetch:
+#   cloning creates .git file...
+$(BASE_DIR)/content/startbootstrap-freelancer/.git:
+	git clone https://github.com/bcodevelopment/startbootstrap-freelancer.git $(BASE_DIR)/content/startbootstrap-freelancer
+
+.PHONY: git-clone
+git-clone: $(BASE_DIR)/content/startbootstrap-freelancer/.git
+
+.PHONY: git-fetch
+git-fetch: git-clone
 	cd $(BASE_DIR)/content/startbootstrap-freelancer && git fetch
 
-git-pull:
+.PHONY: git-pull
+git-pull: git-clone
+	mkdir $(BASE_DIR)/content/startbootstrap-freelancer 
 	cd $(BASE_DIR)/content/startbootstrap-freelancer && git pull
+
+.PHONY: git-status
+git-status: git-clone
+	cd $(BASE_DIR)/content/startbootstrap-freelancer && git status
+	git status
 
 dist:
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/* $(BASE_DIR)/html
