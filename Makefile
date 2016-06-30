@@ -40,8 +40,13 @@ network_create:
 $(BASE_DIR)/content/startbootstrap-freelancer/.git:
 	git clone https://github.com/bcodevelopment/startbootstrap-freelancer.git $(BASE_DIR)/content/startbootstrap-freelancer
 
+$(BASE_DIR)/content/bootstrap/.git: 
+	git clone https://github.com/twbs/bootstrap.git $(BASE_DIR)/content/bootstrap
+
 .PHONY: git-clone
-git-clone: $(BASE_DIR)/content/startbootstrap-freelancer/.git
+git-clone: \
+	$(BASE_DIR)/content/startbootstrap-freelancer/.git \
+	$(BASE_DIR)/content/bootstrap/.git
 
 .PHONY: git-fetch
 git-fetch: git-clone
@@ -57,9 +62,10 @@ git-status: git-clone
 	cd $(BASE_DIR)/content/startbootstrap-freelancer && git status
 	git status
 
-dist:
+dist: git-clone
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/* $(BASE_DIR)/html
-	rsync -av --recursive --exclude=".*" $(BASE_DIR)/frameworks/bootstrap/dist/* $(BASE_DIR)/html
+#
+#rsync -av --recursive --exclude=".*" $(BASE_DIR)/frameworks/bootstrap/dist/* $(BASE_DIR)/html
 	
 # MYSQL Targets
 run_mysql:
