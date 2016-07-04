@@ -50,7 +50,7 @@ git-clone: \
 
 .PHONY: git-fetch
 git-fetch: git-clone
-	cd $(BASE_DIR)/content/startbootstrap-freelancer && git fetch
+	cd $(BASE_DIR)/content/c && git fetch
 
 .PHONY: git-pull
 git-pull: git-clone 
@@ -64,9 +64,13 @@ git-status: git-clone
 
 .PHONY: dist
 dist: git-clone
-	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/* $(BASE_DIR)/html
+	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/startbootstrap-freelancer/* $(BASE_DIR)/html
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/bootstrap/dist/* $(BASE_DIR)/html
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/html/* $(BASE_DIR)/html
+
+.PHONY: clean
+clean:
+	rm -rf $(BASE_DIR)/html/*
 	
 # MYSQL Targets
 run_mysql:
