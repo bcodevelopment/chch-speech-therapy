@@ -64,7 +64,7 @@ git-status: git-clone
 
 .PHONY: dist
 dist: git-clone
-	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/startbootstrap-freelancer/* $(BASE_DIR)/html
+	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/startbootstrap-freelancer/* $(BASE_DIR)/html/startbootstrap-freelancer
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/bootstrap/dist/* $(BASE_DIR)/html
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/html/* $(BASE_DIR)/html
 
