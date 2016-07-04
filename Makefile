@@ -97,7 +97,7 @@ logs_mysql:
 # NGINX Targets
 
 
-run-nginx: dist rm-nginx
+run-nginx: dist 
 	docker run \
 		-p 80:80 \
 		--net=$(ISOLATED_NETWORK_NAME) \
