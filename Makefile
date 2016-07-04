@@ -53,19 +53,20 @@ git-fetch: git-clone
 	cd $(BASE_DIR)/content/startbootstrap-freelancer && git fetch
 
 .PHONY: git-pull
-git-pull: git-clone
-	mkdir $(BASE_DIR)/content/startbootstrap-freelancer 
+git-pull: git-clone 
 	cd $(BASE_DIR)/content/startbootstrap-freelancer && git pull
 
 .PHONY: git-status
 git-status: git-clone
 	cd $(BASE_DIR)/content/startbootstrap-freelancer && git status
+	cd $(BASE_DIR)/content/bootstrap && git status
 	git status
 
+.PHONY: dist
 dist: git-clone
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/* $(BASE_DIR)/html
-#
-#rsync -av --recursive --exclude=".*" $(BASE_DIR)/frameworks/bootstrap/dist/* $(BASE_DIR)/html
+	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/bootstrap/dist/* $(BASE_DIR)/html
+	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/html/* $(BASE_DIR)/html
 	
 # MYSQL Targets
 run_mysql:
@@ -92,7 +93,7 @@ logs_mysql:
 # NGINX Targets
 
 
-run-nginx: dist
+run-nginx: dist rm-nginx
 	docker run \
 		-p 80:80 \
 		--net=$(ISOLATED_NETWORK_NAME) \
@@ -109,7 +110,7 @@ start-nginx:
 stop-nginx:
 	docker stop $(NGINX_CONTAINER_NAME)
 
-rm-nginx:
+rm-nginx: stop-nginx
 	docker rm $(NGINX_CONTAINER_NAME)
 
 restart-nginx: stop-nginx rm-nginx run-nginx
