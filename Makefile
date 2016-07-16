@@ -65,7 +65,7 @@ git-status: git-clone
 .PHONY: dist
 dist: git-clone
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/startbootstrap-freelancer/* $(BASE_DIR)/html/startbootstrap-freelancer
-	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/bootstrap/dist/* $(BASE_DIR)/html
+	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/bootstrap/dist/* $(BASE_DIR)/html/bootstrap
 	rsync -av --recursive --exclude=".*" $(BASE_DIR)/content/html/* $(BASE_DIR)/html
 
 .PHONY: clean
@@ -95,6 +95,15 @@ logs_mysql:
 
 # ==================================================================
 # NGINX Targets
+create-nginx: dist 
+	docker create \
+		--publish 80:80 \
+		--network $(ISOLATED_NETWORK_NAME) \
+		--name $(NGINX_CONTAINER_NAME) \
+		--volume $(BASE_DIR)/my-nginx:/etc/nginx/conf.d:ro \
+		--volume $(BASE_DIR)/my-nginx/tmp:/tmp \
+		--volume $(BASE_DIR)/html:/var/www/html \
+		$(NGINX_IMAGE_NAME)
 
 
 run-nginx: dist 
@@ -109,13 +118,13 @@ run-nginx: dist
 		$(NGINX_IMAGE_NAME)
 
 start-nginx:
-	docker start $(NGINX_CONTAINER_NAME)
+	docker start --detach $(NGINX_CONTAINER_NAME)
 
 stop-nginx:
-	docker stop $(NGINX_CONTAINER_NAME)
+	$(BASE_DIR)/docker-stop.sh $(NGINX_CONTAINER_NAME)
 
 rm-nginx: stop-nginx
-	docker rm $(NGINX_CONTAINER_NAME)
+	$(BASE_DIR)/docker-remove.sh $(NGINX_CONTAINER_NAME)
 
 restart-nginx: stop-nginx rm-nginx run-nginx
 	echo "restart nginx"
